@@ -91,7 +91,10 @@ allOperatorBreaks (x:xs) = (case x of
 splitAtLowestPrecedence :: PartlyFormedExpression -> Maybe (BinOp, PartlyFormedExpression, PartlyFormedExpression)
 splitAtLowestPrecedence xs = let bs = (allOperatorBreaks xs) in
     if null bs then Nothing else
-        Just $ minimumBy (compare `on` (\(op,_,_) -> precedence op)) bs
+        Just $ minimumBy (compare `on` (\(op,_,rhs) -> (precedence op, length rhs))) bs
+        -- Note: we break ties in favor of RHS being shorter to make the operations left-associative.
+        -- That is, the right most operation in a tier is the one that happens
+        -- last, so it should be the one we split the expression on first.
 
 groupOperations :: PartlyFormedExpression -> Either ParseError CalculationExpr
 groupOperations [] = Left EmptyTerm
