@@ -139,7 +139,7 @@ parseAndEvalCalculation s = do
     expr <- buildCalculationExpr tree
     return $ evalCalculationExpr expr
 
--- Interatctive loop
+-- Interactive loop
 main :: IO ()
 main = forever $ do
     putStr "> "
